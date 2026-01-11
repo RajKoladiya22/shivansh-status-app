@@ -179,7 +179,7 @@ const AutocompleteInput = ({
   const [history, setHistory] = useState(getFromStorage(historyKey));
 
   const filteredHistory = history.filter(
-    (h:any) => h.toLowerCase().includes(value.toLowerCase()) && h !== value
+    (h: any) => h.toLowerCase().includes(value.toLowerCase()) && h !== value
   );
 
   const handleSelect = (suggestion: any) => {
@@ -343,7 +343,7 @@ export default function StatusUpdateCreator() {
   const generateMessage = () => {
     const today = new Date().toLocaleDateString("en-GB");
 
-    let message = `Hi ${tlName},\nHere is the update of ${projectName} as on ${today}\n\n`;
+    let message = `Hi ${tlName},\nHere is the update of ${projectName}${today}\n\n`;
 
     if (workedOn.some((item) => item.trim())) {
       message += `Worked-On:\n`;
@@ -536,7 +536,7 @@ export default function StatusUpdateCreator() {
                 />
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-bold text-gray-900 mb-1.5">
                   Project Name *
                 </label>
@@ -546,7 +546,7 @@ export default function StatusUpdateCreator() {
                   placeholder="Enter project name"
                   historyKey="projectNames"
                 />
-              </div>
+              </div> */}
 
               <div>
                 <div className="flex items-center justify-between mb-2.5">
