@@ -412,7 +412,7 @@ export default function StatusUpdateCreator() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm p-4 sm:p-5 mb-4">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               {/* <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center shadow-lg flex-shrink-0">
                 <span className="text-white font-bold text-base sm:text-xl">
@@ -439,7 +439,7 @@ export default function StatusUpdateCreator() {
                     className="h-10 w-auto hidden dark:block"
                   />
 
-                  <div className="hidden md:flex">
+                  <div className="flex">
                     <div className="site-logo-text ">
                       <h2 className="flex items-center text-lg font-bold leading-none">
                         <span className="text-red-600 dark:text-red-500">
