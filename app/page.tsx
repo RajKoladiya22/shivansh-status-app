@@ -524,7 +524,7 @@ export default function StatusUpdateCreator() {
             </h2>
 
             <div className="space-y-4">
-              <div>
+              {/* <div>
                 <label className="block text-sm font-bold text-gray-900 mb-1.5">
                   TL Name *
                 </label>
@@ -534,7 +534,7 @@ export default function StatusUpdateCreator() {
                   placeholder="Enter team leader name"
                   historyKey="tlNames"
                 />
-              </div>
+              </div> */}
 
               {/* <div>
                 <label className="block text-sm font-bold text-gray-900 mb-1.5">
