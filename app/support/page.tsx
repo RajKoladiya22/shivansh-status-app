@@ -344,33 +344,34 @@ export default function StatusUpdateCreator() {
   const generateMessage = () => {
     const today = new Date().toLocaleDateString("en-GB");
 
-    let message = `Hi ${tlName},\nHere is the update of ${projectName}${today}\n\n`;
+    let message = `Account Team *${yourName}'s* Daily Status of ${projectName}${today}\n\n`;
 
     if (workedOn.some((item) => item.trim())) {
-      message += `Worked-On:\n`;
+      message += `*Worked-On:*\n`;
       workedOn.forEach((item) => {
         if (item.trim()) message += `- ${item}\n`;
       });
-      message += "\n";
+      message += "\n\n";
     }
 
     if (inProgress.some((item) => item.trim())) {
-      message += `In-Progress Task:\n`;
+      message += `*In-Progress Task:*\n`;
       inProgress.forEach((item) => {
         if (item.trim()) message += `- ${item}\n`;
       });
-      message += "\n";
+      message += "\n\n";
     }
 
     if (queries.some((item) => item.trim())) {
-      message += `Query:\n`;
+      message += `*Query:*\n`;
       queries.forEach((item) => {
         if (item.trim()) message += `- ${item}\n`;
       });
-      message += "\n";
+      message += "\n\n";
     }
 
-    message += `Thank You,\n\n${yourName}`;
+    // message += `Thank You,\n\n${yourName}`;
+    message += `Submitted by: ${yourName}`;
 
     return message;
   };
@@ -549,6 +550,18 @@ export default function StatusUpdateCreator() {
                 />
               </div> */}
 
+                            <div>
+                <label className="block text-sm font-bold text-gray-900 mb-1.5">
+                  Your Name *
+                </label>
+                <AutocompleteInput
+                  value={yourName}
+                  onChange={setYourName}
+                  placeholder="Enter your name"
+                  historyKey="yourNames"
+                />
+              </div>
+
               <div>
                 <div className="flex items-center justify-between mb-2.5">
                   <label className="text-sm font-bold text-gray-900">
@@ -629,17 +642,7 @@ export default function StatusUpdateCreator() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-bold text-gray-900 mb-1.5">
-                  Your Name *
-                </label>
-                <AutocompleteInput
-                  value={yourName}
-                  onChange={setYourName}
-                  placeholder="Enter your name"
-                  historyKey="yourNames"
-                />
-              </div>
+
             </div>
           </div>
 
