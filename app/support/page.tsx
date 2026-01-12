@@ -453,9 +453,7 @@ export default function StatusUpdateCreator() {
                       </h2>
 
                       <p className="mt-0.5 text-[12px] text-gray-500 dark:text-gray-400 flex items-center">
-                        <span className="whitespace-nowrap">
-                          Support Team 
-                        </span>
+                        <span className="whitespace-nowrap">Support Team</span>
                         <span className="mx-1">-</span>
                         <span className="whitespace-nowrap">Daily Status</span>
                       </p>
@@ -550,7 +548,7 @@ export default function StatusUpdateCreator() {
                 />
               </div> */}
 
-                            <div>
+              <div>
                 <label className="block text-sm font-bold text-gray-900 mb-1.5">
                   Your Name *
                 </label>
@@ -641,8 +639,6 @@ export default function StatusUpdateCreator() {
                   ))}
                 </div>
               </div>
-
-
             </div>
           </div>
 
@@ -679,5 +675,3 @@ export default function StatusUpdateCreator() {
     </div>
   );
 }
-
-

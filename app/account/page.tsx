@@ -5,7 +5,16 @@ import React, { useState, useEffect } from "react";
 import { Plus, X, Copy, Check, Clock, ChevronDown } from "lucide-react";
 
 // In-memory storage (no localStorage/sessionStorage as per requirements)
-const inMemoryStorage = {
+type InMemoryStorageType = {
+  salesWork: string[];
+  tallyFeatures: string[];
+  products: string[];
+  experts: string[];
+  followUpStatus: string[];
+  statusUpdates: any[]; // stored updates
+};
+
+const inMemoryStorage: InMemoryStorageType = {
   salesWork: ["Sales", "Purchase", "Ledger Entry"],
   tallyFeatures: [
     "Payment Entry",
@@ -42,15 +51,15 @@ const inMemoryStorage = {
   statusUpdates: [],
 };
 
-const getFromStorage = (key) => {
+const getFromStorage = (key: keyof InMemoryStorageType) => {
   return inMemoryStorage[key] || [];
 };
 
-const setToStorage = (key, value) => {
+const setToStorage = (key: keyof InMemoryStorageType, value: any) => {
   inMemoryStorage[key] = value;
 };
 
-const saveStatusUpdate = (update) => {
+const saveStatusUpdate = (update:any) => {
   const newUpdate = { ...update, date: new Date().toISOString() };
   const current = getFromStorage("statusUpdates");
   const updated = [newUpdate, ...current].slice(0, 50);
@@ -62,12 +71,12 @@ const getRecentUpdates = () => {
   const updates = getFromStorage("statusUpdates");
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  return updates.filter((u) => new Date(u.date) >= sevenDaysAgo);
+  return updates.filter((u:any) => new Date(u.date) >= sevenDaysAgo);
 };
 
 
 // Select Dropdown Component
-const SelectDropdown = ({ options, value, onChange, placeholder }) => {
+const SelectDropdown = ({ options, value, onChange, placeholder }:any) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -94,7 +103,7 @@ const SelectDropdown = ({ options, value, onChange, placeholder }) => {
             onClick={() => setIsOpen(false)}
           />
           <div className="absolute z-20 w-full mt-1 bg-white border-2 border-gray-200 rounded-lg shadow-xl max-h-60 overflow-auto">
-            {options.map((option, idx) => (
+            {options.map((option:any, idx:any) => (
               <button
                 key={idx}
                 onClick={() => {
@@ -114,7 +123,7 @@ const SelectDropdown = ({ options, value, onChange, placeholder }) => {
 };
 
 // Sales Entry Input Component
-const SalesEntryInput = ({ value, onChange, onRemove, showRemove }) => {
+const SalesEntryInput = ({ value, onChange, onRemove, showRemove }:any) => {
   const [work, setWork] = useState("");
   const [entries, setEntries] = useState("");
   const [remarks, setRemarks] = useState("");
@@ -128,7 +137,7 @@ const SalesEntryInput = ({ value, onChange, onRemove, showRemove }) => {
     }
   }, [value]);
 
-  const updateValue = (w, e, r) => {
+  const updateValue = (w:any, e:any, r:any) => {
     const result = `${w} | ${e} | ${r}`;
     onChange(result);
   };
@@ -153,7 +162,7 @@ const SalesEntryInput = ({ value, onChange, onRemove, showRemove }) => {
           <SelectDropdown
             options={getFromStorage("salesWork")}
             value={work}
-            onChange={(w) => {
+            onChange={(w:any) => {
               setWork(w);
               updateValue(w, entries, remarks);
             }}
@@ -167,7 +176,7 @@ const SalesEntryInput = ({ value, onChange, onRemove, showRemove }) => {
           <input
             type="number"
             value={entries}
-            onChange={(e) => {
+            onChange={(e:any) => {
               setEntries(e.target.value);
               updateValue(work, e.target.value, remarks);
             }}
@@ -184,7 +193,7 @@ const SalesEntryInput = ({ value, onChange, onRemove, showRemove }) => {
         <input
           type="text"
           value={remarks}
-          onChange={(e) => {
+          onChange={(e:any) => {
             setRemarks(e.target.value);
             updateValue(work, entries, e.target.value);
           }}
@@ -197,7 +206,7 @@ const SalesEntryInput = ({ value, onChange, onRemove, showRemove }) => {
 };
 
 // Payment Follow-up Input Component
-const PaymentFollowUpInput = ({ value, onChange, onRemove, showRemove }) => {
+const PaymentFollowUpInput = ({ value, onChange, onRemove, showRemove }:any) => {
   const [customer, setCustomer] = useState("");
   const [feature, setFeature] = useState("");
   const [status, setStatus] = useState("");
@@ -213,7 +222,7 @@ const PaymentFollowUpInput = ({ value, onChange, onRemove, showRemove }) => {
     }
   }, [value]);
 
-  const updateValue = (c, f, s, r) => {
+  const updateValue = (c:any, f:any, s:any, r:any) => {
     const result = `${c} | ${f} | ${s} | ${r}`;
     onChange(result);
   };
@@ -238,7 +247,7 @@ const PaymentFollowUpInput = ({ value, onChange, onRemove, showRemove }) => {
           <input
             type="text"
             value={customer}
-            onChange={(e) => {
+            onChange={(e:any) => {
               setCustomer(e.target.value);
               updateValue(e.target.value, feature, status, remarks);
             }}
@@ -253,7 +262,7 @@ const PaymentFollowUpInput = ({ value, onChange, onRemove, showRemove }) => {
           <SelectDropdown
             options={getFromStorage("tallyFeatures")}
             value={feature}
-            onChange={(f) => {
+            onChange={(f:any) => {
               setFeature(f);
               updateValue(customer, f, status, remarks);
             }}
@@ -270,7 +279,7 @@ const PaymentFollowUpInput = ({ value, onChange, onRemove, showRemove }) => {
           <SelectDropdown
             options={getFromStorage("followUpStatus")}
             value={status}
-            onChange={(s) => {
+            onChange={(s:any) => {
               setStatus(s);
               updateValue(customer, feature, s, remarks);
             }}
@@ -284,7 +293,7 @@ const PaymentFollowUpInput = ({ value, onChange, onRemove, showRemove }) => {
           <input
             type="text"
             value={remarks}
-            onChange={(e) => {
+            onChange={(e:any) => {
               setRemarks(e.target.value);
               updateValue(customer, feature, status, e.target.value);
             }}
@@ -298,14 +307,14 @@ const PaymentFollowUpInput = ({ value, onChange, onRemove, showRemove }) => {
 };
 
 // Learning Input Component
-const LearningInput = ({ value, onChange, onRemove, showRemove }) => {
+const LearningInput = ({ value, onChange, onRemove, showRemove }:any) => {
   const [product, setProduct] = useState(value || "");
 
   useEffect(() => {
     setProduct(value || "");
   }, [value]);
 
-  const updateValue = (p) => {
+  const updateValue = (p:any) => {
     setProduct(p);
     onChange(p);
   };
@@ -338,7 +347,7 @@ const LearningInput = ({ value, onChange, onRemove, showRemove }) => {
 };
 
 // Query Input Component
-const QueryInput = ({ value, onChange, onRemove, showRemove }) => {
+const QueryInput = ({ value, onChange, onRemove, showRemove }:any) => {
   const [expert, setExpert] = useState("");
   const [remarks, setRemarks] = useState("");
 
@@ -350,7 +359,7 @@ const QueryInput = ({ value, onChange, onRemove, showRemove }) => {
     }
   }, [value]);
 
-  const updateValue = (e, r) => {
+  const updateValue = (e:any, r:any) => {
     const result = `${e} | ${r}`;
     onChange(result);
   };
@@ -375,7 +384,7 @@ const QueryInput = ({ value, onChange, onRemove, showRemove }) => {
           <SelectDropdown
             options={getFromStorage("experts")}
             value={expert}
-            onChange={(e) => {
+            onChange={(e:any) => {
               setExpert(e);
               updateValue(e, remarks);
             }}
@@ -389,7 +398,7 @@ const QueryInput = ({ value, onChange, onRemove, showRemove }) => {
           <input
             type="text"
             value={remarks}
-            onChange={(e) => {
+            onChange={(e:any) => {
               setRemarks(e.target.value);
               updateValue(expert, e.target.value);
             }}
@@ -412,16 +421,16 @@ export default function AccountTeamStatus() {
   const [copied, setCopied] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
-  const addItem = (setter) => {
-    setter((prev) => [...prev, ""]);
+  const addItem = (setter:any) => {
+    setter((prev:any) => [...prev, ""]);
   };
 
-  const removeItem = (setter, index) => {
-    setter((prev) => prev.filter((_, i) => i !== index));
+  const removeItem = (setter:any, index:any) => {
+    setter((prev:any) => prev.filter((_:any, i:any) => i !== index));
   };
 
-  const updateItem = (setter, index, value) => {
-    setter((prev) => prev.map((item, i) => (i === index ? value : item)));
+  const updateItem = (setter:any, index:any, value:any) => {
+    setter((prev:any) => prev.map((item:any, i:any) => (i === index ? value : item)));
   };
 
   const generateMessage = () => {
@@ -505,7 +514,7 @@ export default function AccountTeamStatus() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const loadFromHistory = (update) => {
+  const loadFromHistory = (update:any) => {
     setYourName(update.yourName || "");
     setSalesEntries(update.salesEntries?.length ? update.salesEntries : [""]);
     setPaymentFollowUps(
@@ -603,7 +612,7 @@ export default function AccountTeamStatus() {
               Recent Updates (Last 7 Days)
             </h3>
             <div className="space-y-2 max-h-80 overflow-auto">
-              {historyUpdates.map((update, idx) => (
+              {historyUpdates.map((update:any, idx:any) => (
                 <button
                   key={idx}
                   onClick={() => loadFromHistory(update)}
@@ -649,7 +658,7 @@ export default function AccountTeamStatus() {
                 <input
                   type="text"
                   value={yourName}
-                  onChange={(e) => setYourName(e.target.value)}
+                  onChange={(e:any) => setYourName(e.target.value)}
                   placeholder="Enter your name"
                   className="text-black w-full px-3 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-white"
                 />
@@ -666,7 +675,7 @@ export default function AccountTeamStatus() {
                     className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 active:scale-95 transition-all shadow-md text-sm font-semibold"
                   >
                     <Plus className="w-4 h-4" />
-                    Add Entry
+                    {/* Add Entry */}
                   </button>
                 </div>
                 <div className="space-y-3">
@@ -674,7 +683,7 @@ export default function AccountTeamStatus() {
                     <SalesEntryInput
                       key={idx}
                       value={item}
-                      onChange={(val) => updateItem(setSalesEntries, idx, val)}
+                      onChange={(val:any)  => updateItem(setSalesEntries, idx, val)}
                       onRemove={() => removeItem(setSalesEntries, idx)}
                       showRemove={salesEntries.length > 1}
                     />
@@ -693,7 +702,7 @@ export default function AccountTeamStatus() {
                     className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 active:scale-95 transition-all shadow-md text-sm font-semibold"
                   >
                     <Plus className="w-4 h-4" />
-                    Add Follow-up
+                    {/* Add Follow-up */}
                   </button>
                 </div>
                 <div className="space-y-3">
@@ -701,7 +710,7 @@ export default function AccountTeamStatus() {
                     <PaymentFollowUpInput
                       key={idx}
                       value={item}
-                      onChange={(val) =>
+                      onChange={(val:any)  =>
                         updateItem(setPaymentFollowUps, idx, val)
                       }
                       onRemove={() => removeItem(setPaymentFollowUps, idx)}
@@ -722,7 +731,7 @@ export default function AccountTeamStatus() {
                     className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 active:scale-95 transition-all shadow-md text-sm font-semibold"
                   >
                     <Plus className="w-4 h-4" />
-                    Add Learning
+                    {/* Add Learning */}
                   </button>
                 </div>
                 <div className="space-y-3">
@@ -730,7 +739,7 @@ export default function AccountTeamStatus() {
                     <LearningInput
                       key={idx}
                       value={item}
-                      onChange={(val) => updateItem(setLearnings, idx, val)}
+                      onChange={(val:any) => updateItem(setLearnings, idx, val)}
                       onRemove={() => removeItem(setLearnings, idx)}
                       showRemove={learnings.length > 1}
                     />
@@ -749,7 +758,7 @@ export default function AccountTeamStatus() {
                     className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 active:scale-95 transition-all shadow-md text-sm font-semibold"
                   >
                     <Plus className="w-4 h-4" />
-                    Add Query
+                    {/* Add Query */}
                   </button>
                 </div>
                 <div className="space-y-3">
@@ -757,7 +766,7 @@ export default function AccountTeamStatus() {
                     <QueryInput
                       key={idx}
                       value={item}
-                      onChange={(val) => updateItem(setQueries, idx, val)}
+                      onChange={(val:any) => updateItem(setQueries, idx, val)}
                       onRemove={() => removeItem(setQueries, idx)}
                       showRemove={queries.length > 1}
                     />
@@ -920,7 +929,7 @@ export default function AccountTeamStatus() {
 //         <input
 //           type="number"
 //           value={entries}
-//           onChange={(e) => update(work, e.target.value, remarks)}
+//           onChange={(e:any) => update(work, e.target.value, remarks)}
 //           placeholder="No. of Entries"
 //           className="input"
 //         />
@@ -928,7 +937,7 @@ export default function AccountTeamStatus() {
 
 //       <input
 //         value={remarks}
-//         onChange={(e) => update(work, entries, e.target.value)}
+//         onChange={(e:any) => update(work, entries, e.target.value)}
 //         placeholder="Remarks"
 //         className="input mt-2"
 //       />
@@ -961,7 +970,7 @@ export default function AccountTeamStatus() {
 
 //       <input
 //         value={customer}
-//         onChange={(e) => update(e.target.value, feature, status, remarks)}
+//         onChange={(e:any) => update(e.target.value, feature, status, remarks)}
 //         placeholder="Customer Name"
 //         className="input mb-2 text-black"
 //       />
@@ -983,7 +992,7 @@ export default function AccountTeamStatus() {
 
 //       <input
 //         value={remarks}
-//         onChange={(e) => update(customer, feature, status, e.target.value)}
+//         onChange={(e:any) => update(customer, feature, status, e.target.value)}
 //         placeholder="Remarks"
 //         className="input mt-2"
 //       />
