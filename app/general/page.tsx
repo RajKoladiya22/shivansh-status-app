@@ -43,37 +43,38 @@ export default function GeneralUpdatePage() {
   function buildMessage() {
     const today = new Date().toLocaleDateString("en-GB");
 
-    let msg = `Here is the update of ${
-      projectName || "Project"
-    } as on ${today}\n\n`;
+    // let msg = `Here is the update of ${
+    //   projectName || "Project"
+    // } as on ${today}\n\n`;
+    let msg = `Here is the ${yourName}'s ${today} update.\n\n`;
 
     // Worked-On
-    msg += `Worked-On:\n`;
     if (workedOn.some((w) => w.task.trim())) {
+      msg += `Worked-On:\n`;
       workedOn.forEach((w) => {
         if (w.task.trim()) {
           msg += `- ${w.task}${w.hrs ? ` [${w.hrs} hrs]` : ""}\n`;
         }
       });
-    } else msg += `- None\n`;
+    } else msg += ``;
     msg += `\n`;
 
     // In Progress
-    msg += `In-Progress Task:\n`;
     if (inProgress.some((p) => p.trim())) {
+      msg += `In-Progress Task:\n`;
       inProgress.forEach((p) => {
         if (p.trim()) msg += `- ${p}\n`;
       });
-    } else msg += `- None\n`;
+    } else msg += ``;
     msg += `\n`;
 
     // Queries
-    msg += `Query:\n`;
     if (queries.some((q) => q.trim())) {
+      msg += `Query:\n`;
       queries.forEach((q) => {
         if (q.trim()) msg += `- ${q}\n`;
       });
-    } else msg += `- None\n`;
+    } else msg += ``;
     msg += `\n`;
 
     msg += `Thank You,\n${yourName || "—"}`;
@@ -97,7 +98,7 @@ export default function GeneralUpdatePage() {
           {/* LEFT: FORM */}
           <div className="bg-white shadow-md rounded-xl p-6 space-y-6">
             {/* TL Name */}
-            <div>
+            {/* <div>
               <label className="text-sm font-semibold text-gray-800">
                 TL Name:
               </label>
@@ -106,10 +107,22 @@ export default function GeneralUpdatePage() {
                 onChange={(e) => setTlName(e.target.value)}
                 className="w-full mt-1 px-3 py-2 border rounded-lg"
               />
+            </div> */}
+            {/* Your Name */}
+            <div>
+              <label className="text-sm font-semibold text-gray-800">
+                Your Name:
+              </label>
+              <input
+                value={yourName}
+                onChange={(e) => setYourName(e.target.value)}
+                placeholder="Name"
+                className="w-full mt-1 px-3 py-2 border rounded-lg"
+              />
             </div>
 
             {/* Project Name */}
-            <div>
+            {/* <div>
               <label className="text-sm font-semibold text-gray-800">
                 Project Name:
               </label>
@@ -119,7 +132,7 @@ export default function GeneralUpdatePage() {
                 className="w-full mt-1 px-3 py-2 border rounded-lg"
                 placeholder="New Project"
               />
-            </div>
+            </div> */}
 
             {/* Worked On */}
             <div>
@@ -240,19 +253,6 @@ export default function GeneralUpdatePage() {
                   </div>
                 ))}
               </div>
-            </div>
-
-            {/* Your Name */}
-            <div>
-              <label className="text-sm font-semibold text-gray-800">
-                Your Name:
-              </label>
-              <input
-                value={yourName}
-                onChange={(e) => setYourName(e.target.value)}
-                placeholder="raj"
-                className="w-full mt-1 px-3 py-2 border rounded-lg"
-              />
             </div>
           </div>
 
