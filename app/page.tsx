@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Users, Briefcase, GraduationCap, ArrowRight, Form } from "lucide-react";
+import { Users, Briefcase, GraduationCap, ArrowRight, Form, NotebookPen } from "lucide-react";
 
 const TEAMS = [
   {
@@ -34,7 +34,15 @@ const TEAMS = [
       "Assign and manage leads efficiently by distributing them to the right team members.",
     href: "/lead-assign",
     icon: Form,
-    gradient: "from-red-600 to-red-700",
+    gradient: "from-red-600 to-red-800",
+  },
+  {
+    title: "General",
+    description:
+      "Write your daily work status",
+    href: "/general",
+    icon: NotebookPen,
+    gradient: "from-yellow-600 to-red-700",
   },
 ];
 
