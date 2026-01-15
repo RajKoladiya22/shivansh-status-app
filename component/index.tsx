@@ -95,9 +95,9 @@ export function Header({
   onToggleHistory,
   teamName,
 }: {
-  hasHistory: boolean;
-  showHistory: boolean;
-  onToggleHistory: () => void;
+  hasHistory?: boolean;
+  showHistory?: boolean;
+  onToggleHistory?: () => void;
   teamName: string;
 }) {
   return (
