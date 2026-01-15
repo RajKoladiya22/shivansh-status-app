@@ -143,7 +143,7 @@ export default function GeneralUpdatePage() {
                 {workedOn.map((w, i) => (
                   <div
                     key={i}
-                    className="flex gap-3 items-center p-3 border rounded-lg bg-gray-50"
+                    className="flex flex-wrap gap-3 items-center p-3 border rounded-lg bg-gray-50"
                   >
                     <input
                       value={w.task}
