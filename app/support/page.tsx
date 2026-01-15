@@ -11,6 +11,20 @@ import TodayLearningSection, {
   saveToHistory,
   TaskList,
 } from "@/component";
+import ExpertQuerySection from "@/component/ExpertQuerySection";
+
+const EXPERT_LIST = [
+  "Mehul Patel",
+  "Suresh Modi",
+  "Litan Das",
+  "Harjeet singh",
+  "Pooja Yadav",
+  "Madhavi Mokde",
+  "Dhara Bhavsar",
+  "Priya Jain",
+  "Hinal Patel",
+  "Astha Pandya",
+];
 
 /* ----------------------------- Main Page ----------------------------- */
 export default function StatusUpdateCreator() {
@@ -23,71 +37,21 @@ export default function StatusUpdateCreator() {
   const [yourName, setYourName] = useState("");
   const [copied, setCopied] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [expertQueries, setExpertQueries] = useState([
+    { expert: "", query: "" },
+  ]);
 
   const historyUpdates = useMemo(() => getRecentUpdates(), []);
-
-  // function copyToClipboard() {
-  //   const today = new Date().toLocaleDateString("en-GB");
-  //   let message = `Account Team *${yourName}'s* Daily Status of ${projectName} ${today}\n\n`;
-
-  //   if (workedOn.some((i) => i.trim())) {
-  //     message += `*Worked-On:*\n`;
-  //     workedOn.forEach((item) => {
-  //       if (item.trim()) message += `- ${item}\n`;
-  //     });
-  //     message += "\n\n";
-  //   }
-  //   if (inProgress.some((i) => i.trim())) {
-  //     message += `*In-Progress Task:*\n`;
-  //     inProgress.forEach((item) => {
-  //       if (item.trim()) message += `- ${item}\n`;
-  //     });
-  //     message += "\n\n";
-  //   }
-  //   if (learnings.some((i) => i.trim())) {
-  //     message += `*My Today Learning:*\n`;
-  //     learnings.forEach((item) => {
-  //       if (item.trim()) message += `- ${item}\n`;
-  //     });
-  //     message += "\n\n";
-  //   }
-  //   if (queries.some((i) => i.trim())) {
-  //     message += `*Query:*\n`;
-  //     queries.forEach((item) => {
-  //       if (item.trim()) message += `- ${item}\n`;
-  //     });
-  //     message += "\n\n";
-  //   }
-
-  //   message += `Submitted by: ${yourName}`;
-  //   navigator.clipboard.writeText(message);
-
-  //   saveStatusUpdate({
-  //     tlName,
-  //     projectName,
-  //     yourName,
-  //     workedOn: workedOn.filter(Boolean),
-  //     inProgress: inProgress.filter(Boolean),
-  //     queries: queries.filter(Boolean),
-  //   });
-
-  //   saveToHistory("tlNames", tlName);
-  //   saveToHistory("projectNames", projectName);
-  //   saveToHistory("yourNames", yourName);
-
-  //   setCopied(true);
-  //   setTimeout(() => setCopied(false), 2000);
-  // }
 
   function copyToClipboard() {
     const formatTask = (item: string) => {
       const [product, customer, comment, status] = item.split(" - ");
 
       return [
-        product ? `• Product: ${product}` : "",
-        customer ? `  Customer: ${customer}` : "",
-        status ? `  Status: ${status}` : "",
-        comment ? `  Comment: ${comment}` : "",
+        product ? `*• Product:* ${product}` : "",
+        customer ? `  *Customer:* ${customer}` : "",
+        status ? `  *Status:* ${status}` : "",
+        comment ? `  *Comment:* ${comment}` : "",
       ]
         .filter(Boolean)
         .join("\n");
@@ -125,8 +89,19 @@ export default function StatusUpdateCreator() {
       );
       message += `\n`;
     }
+    if (expertQueries.some((q) => q.expert.trim() || q.query.trim())) {
+      message += `Any Query from Expert:\n`;
+      expertQueries.forEach((q) => {
+        if (q.expert.trim() || q.query.trim()) {
+          message += `- *Expert:* _${q.expert || "—"}_\n`;
+          message += `  *Query:* _${q.query || "—"}_\n\n`;
+        }
+      });
+    } else {
+      message += `\n`;
+    }
 
-    message += `Submitted by: ${yourName}`;
+    message += `*Submitted by:* ${yourName}`;
 
     navigator.clipboard.writeText(message);
 
@@ -137,6 +112,7 @@ export default function StatusUpdateCreator() {
       workedOn: workedOn.filter(Boolean),
       inProgress: inProgress.filter(Boolean),
       queries: queries.filter(Boolean),
+      expertQueries,
     });
 
     saveToHistory("tlNames", tlName);
@@ -154,6 +130,7 @@ export default function StatusUpdateCreator() {
     setWorkedOn(update.workedOn?.length ? update.workedOn : [""]);
     setInProgress(update.inProgress?.length ? update.inProgress : [""]);
     setQueries(update.queries?.length ? update.queries : [""]);
+    setExpertQueries(update.expertQueries ? update.expertQueries : {});
     setShowHistory(false);
   }
 
@@ -216,6 +193,12 @@ export default function StatusUpdateCreator() {
                 title="Queries"
                 addColor="bg-purple-600"
               />
+              <ExpertQuerySection
+                items={expertQueries}
+                setItems={setExpertQueries}
+                experts={EXPERT_LIST}
+                historyKey="expertNames"
+              />
             </div>
           </div>
 
@@ -248,6 +231,7 @@ export default function StatusUpdateCreator() {
               inProgress={inProgress}
               learnings={learnings}
               queries={queries}
+              expertQueries={expertQueries}
             />
           </div>
         </div>

@@ -663,7 +663,7 @@ export function TaskList({
         }`}
       >
         <Plus className="w-4 h-4" />
-        Add Task
+        Add
       </button>
     </div>
   );
@@ -748,11 +748,11 @@ export default function TodayLearningSection({
     setLearnings(learnings.map((item, i) => (i === index ? value : item)));
   }
   return (
-    <div className="relative pb-14 pt-2 px-2 border rounded-lg border-2 border-gray-200">
+    <div className="relative pb-10 pt-2 px-2 border rounded-lg border-2 border-gray-200">
       {/* Header */}
       <div className="flex items-center justify-between mb-2.5">
         <label className="text-sm font-bold text-gray-900">
-          3. My Today Learning
+          My Today Learning
         </label>
       </div>
 
@@ -772,7 +772,7 @@ export default function TodayLearningSection({
       {/* Add Button */}
       <button
         onClick={addItem}
-        className="absolute bottom-2 right-2 flex items-center gap-1.5 px-3 py-2
+        className="absolute bottom-0 right-0 flex items-center gap-1.5 px-3 py-2
                  bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg
                  hover:from-green-700 hover:to-green-800 active:scale-95
                  transition-all shadow-md text-sm font-semibold"
@@ -793,46 +793,8 @@ export function Preview({
   inProgress,
   learnings,
   queries,
+  expertQueries,
 }: any) {
-  //   function generateMessage() {
-  //     const today = new Date().toLocaleDateString("en-GB");
-  //     let message = `Account Team *${yourName}'s* Daily Status of ${projectName} ${today}\n\n`;
-
-  //     if (workedOn.some((i: string) => i.trim())) {
-  //       message += `*Worked-On:*\n`;
-  //       workedOn.forEach((item: string) => {
-  //         if (item.trim()) message += `- ${item}\n`;
-  //       });
-  //       message += "\n\n";
-  //     }
-
-  //     if (inProgress.some((i: string) => i.trim())) {
-  //       message += `*In-Progress Task:*\n`;
-  //       inProgress.forEach((item: string) => {
-  //         if (item.trim()) message += `- ${item}\n`;
-  //       });
-  //       message += "\n\n";
-  //     }
-  //     if (learnings?.some((i: string) => i.trim())) {
-  //       message += `*My Today Learning:*\n`;
-  //       learnings.forEach((item: string) => {
-  //         if (item.trim()) message += `- ${item}\n`;
-  //       });
-  //       message += "\n\n";
-  //     }
-
-  //     if (queries.some((i: string) => i.trim())) {
-  //       message += `*Query:*\n`;
-  //       queries.forEach((item: string) => {
-  //         if (item.trim()) message += `- ${item}\n`;
-  //       });
-  //       message += "\n\n";
-  //     }
-
-  //     message += `Submitted by: ${yourName}`;
-  //     return message;
-  //   }
-
   function formatTask(item: string) {
     const [product, customer, comment, status] = item.split(" - ");
 
@@ -848,24 +810,24 @@ export function Preview({
 
   function generateMessage() {
     const today = new Date().toLocaleDateString("en-GB");
-    let message = `Account Team *${yourName}'s* Daily Status of ${projectName} ${today}\n\n`;
+    let message = `Account Team ${yourName}'s Daily Status of ${projectName} ${today}\n\n`;
 
     if (workedOn.some((i: any) => i.trim())) {
-      message += `*Worked-On:*\n`;
+      message += `Worked-On:\n`;
       workedOn.forEach((item: string) => {
         if (item.trim()) message += `${formatTask(item)}\n\n`;
       });
     }
 
     if (inProgress.some((i: string) => i.trim())) {
-      message += `*In-Progress Task:*\n`;
+      message += `In-Progress Task:\n`;
       inProgress.forEach((item: string) => {
         if (item.trim()) message += `${formatTask(item)}\n\n`;
       });
     }
 
     if (learnings.some((i: string) => i.trim())) {
-      message += `*My Today Learning:*\n`;
+      message += `My Today Learning:\n`;
       learnings.forEach((item: string) => {
         if (item.trim()) message += `- ${item}\n`;
       });
@@ -873,11 +835,23 @@ export function Preview({
     }
 
     if (queries.some((i: string) => i.trim())) {
-      message += `*Query:*\n`;
+      message += `Query:\n`;
       queries.forEach((item: string) => {
         if (item.trim()) message += `${formatTask(item)}\n\n`;
       });
       message += "\n";
+    }
+
+        if (expertQueries.some((q:any) => q.expert.trim() || q.query.trim())) {
+      message += `Any Query from Expert:\n`;
+      expertQueries.forEach((q:any) => {
+        if (q.expert.trim() || q.query.trim()) {
+          message += `- Expert: ${q.expert || "—"}\n`;
+          message += `  Query: ${q.query || "—"}\n\n`;
+        }
+      });
+    } else {
+      message += `\n`;
     }
 
     message += `Submitted by: ${yourName}`;
