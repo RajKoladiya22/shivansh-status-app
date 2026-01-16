@@ -845,7 +845,7 @@ import TodayLearningSection, {
   saveStatusUpdate,
   saveToHistory,
 } from "@/component";
-import { Copy, Check, Plus, X } from "lucide-react";
+import { Copy, Check, Plus, X, Send } from "lucide-react";
 import ExpertQuerySection from "@/component/ExpertQuerySection";
 
 /**
@@ -1067,6 +1067,13 @@ export default function AccountStatusPage() {
   /* ----------------------------- Derived values ----------------------------- */
   const isCopyDisabled = !yourName.trim();
 
+    function sendToWhatsApp() {
+    const message = encodeURIComponent(buildMessage());
+    const url = `https://wa.me/?text=${message}`;
+    window.open(url, "_blank");
+  }
+
+
   /* ----------------------------- Render ----------------------------- */
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 py-6 px-4">
@@ -1269,7 +1276,7 @@ export default function AccountStatusPage() {
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-white text-sm font-bold transition-all shadow-lg ${
                   isCopyDisabled
                     ? "bg-gray-300 cursor-not-allowed"
-                    : "bg-green-600 hover:bg-green-700 active:scale-95"
+                    : "bg-blue-600 hover:bg-blue-700 active:scale-95"
                 }`}
               >
                 {copied ? (
@@ -1286,17 +1293,27 @@ export default function AccountStatusPage() {
               </button>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-50 to-gray-100 rounded-lg p-4 border-2 border-gray-200 min-h-[320px] max-h-[520px] overflow-auto">
+            <div className="bg-gradient-to-br from-slate-50 to-gray-100 rounded-lg p-4 mb-9 border-2 border-gray-200 min-h-[320px] max-h-[520px] overflow-auto">
               <pre className="whitespace-pre-wrap font-sans text-sm text-gray-800 leading-relaxed">
                 {buildMessage()}
               </pre>
             </div>
+                          <button
+                onClick={sendToWhatsApp}
+                className="absolute bottom-0 right-5 z-50 flex items-center gap-2 
+             px-3 py-2 bg-green-700 text-white rounded-full 
+             hover:opacity-90 active:scale-95 transition-all 
+             text-sm font-bold shadow-lg mb-2"
+              >
+                <Send />
+                WhatsApp
+              </button>
 
-            <p className="text-xs mt-3 text-gray-500">
+            {/* <p className="text-xs mt-3 text-gray-500">
               ✓ Status will be copied to clipboard and saved in history. <br />
               Note: All data is stored in memory/localStorage and may be lost on
               page refresh.
-            </p>
+            </p> */}
           </div>
         </div>
       </div>

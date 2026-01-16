@@ -37,6 +37,14 @@ const TEAMS = [
     gradient: "from-red-600 to-red-800",
   },
   {
+    title: "Support Lead",
+    description:
+      "Assign and manage Support leads efficiently by distributing them to the right team members.",
+    href: "/support-call",
+    icon: Form,
+    gradient: "from-gray-600 to-blue-800",
+  },
+  {
     title: "General",
     description:
       "Write your daily work status",

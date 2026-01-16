@@ -859,7 +859,7 @@ export function Preview({
   }
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 to-gray-100 rounded-lg p-4 border-2 border-gray-200 min-h-[300px] sm:min-h-[450px] shadow-inner overflow-auto">
+    <div className="bg-gradient-to-br from-slate-50 to-gray-100 rounded-lg p-4 mb-9 border-2 border-gray-200 min-h-[300px] sm:min-h-[450px] shadow-inner overflow-auto">
       <pre className="whitespace-pre-wrap font-sans text-sm text-gray-800 leading-relaxed">
         {generateMessage()}
       </pre>

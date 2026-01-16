@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Send } from "lucide-react";
 import TodayLearningSection, {
   AutocompleteInput,
   getRecentUpdates,
@@ -42,6 +42,68 @@ export default function StatusUpdateCreator() {
   ]);
 
   const historyUpdates = useMemo(() => getRecentUpdates(), []);
+
+  function buildMessage() {
+    const formatTask = (item: string) => {
+      const [product, customer, comment, status] = item.split(" - ");
+
+      return [
+        product ? `*• Product:* ${product}` : "",
+        customer ? `  *Customer:* ${customer}` : "",
+        status ? `  *Status:* ${status}` : "",
+        comment ? `  *Comment:* ${comment}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n");
+    };
+
+    const today = new Date().toLocaleDateString("en-GB");
+    let message = `Account Team *${yourName}'s* Daily Status of ${projectName} ${today}\n\n`;
+
+    if (workedOn.some((i) => i.trim())) {
+      message += `*Worked-On:*\n`;
+      workedOn.forEach((item) => {
+        if (item.trim()) message += `${formatTask(item)}\n\n`;
+      });
+    }
+
+    if (inProgress.some((i) => i.trim())) {
+      message += `*In-Progress Task:*\n`;
+      inProgress.forEach((item) => {
+        if (item.trim()) message += `${formatTask(item)}\n\n`;
+      });
+    }
+
+    if (learnings.some((i) => i.trim())) {
+      message += `*My Today Learning:*\n`;
+      learnings.forEach((item) => {
+        if (item.trim()) message += `- ${item}\n`;
+      });
+      message += `\n`;
+    }
+
+    if (queries.some((i) => i.trim())) {
+      message += `*Query:*\n`;
+      queries.forEach((item) => {
+        if (item.trim()) message += `- ${formatTask(item)}\n`;
+      });
+      message += `\n`;
+    }
+
+    if (expertQueries.some((q) => q.expert.trim() || q.query.trim())) {
+      message += `Any Query from Expert:\n`;
+      expertQueries.forEach((q) => {
+        if (q.expert.trim() || q.query.trim()) {
+          message += `- *Expert:* _${q.expert || "—"}_\n`;
+          message += `  *Query:* _${q.query || "—"}_\n\n`;
+        }
+      });
+    }
+
+    message += `*Submitted by:* ${yourName}`;
+
+    return message;
+  }
 
   function copyToClipboard() {
     const formatTask = (item: string) => {
@@ -132,6 +194,12 @@ export default function StatusUpdateCreator() {
     setQueries(update.queries?.length ? update.queries : [""]);
     setExpertQueries(update.expertQueries ? update.expertQueries : {});
     setShowHistory(false);
+  }
+
+  function sendToWhatsApp() {
+    const message = encodeURIComponent(buildMessage());
+    const url = `https://wa.me/?text=${message}`;
+    window.open(url, "_blank");
   }
 
   return (
@@ -233,6 +301,16 @@ export default function StatusUpdateCreator() {
               queries={queries}
               expertQueries={expertQueries}
             />
+            <button
+              onClick={sendToWhatsApp}
+              className="absolute bottom-0 right-5 z-50 flex items-center gap-2 
+             px-3 py-2 bg-green-700 text-white rounded-full 
+             hover:opacity-90 active:scale-95 transition-all 
+             text-sm font-bold shadow-lg mb-2"
+            >
+              <Send />
+              WhatsApp
+            </button>
           </div>
         </div>
       </div>

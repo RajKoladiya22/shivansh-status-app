@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { AutocompleteInput, Header } from "@/component";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Send } from "lucide-react";
 
 export default function LeadAssignPage() {
   const [adminName, setAdminName] = useState("Mehul Patel");
@@ -47,6 +47,12 @@ export default function LeadAssignPage() {
 
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  }
+
+  function sendToWhatsApp() {
+    const message = encodeURIComponent(buildMessage());
+    const url = `https://wa.me/?text=${message}`;
+    window.open(url, "_blank");
   }
 
   return (
@@ -169,7 +175,7 @@ export default function LeadAssignPage() {
 
               <button
                 onClick={copyToClipboard}
-                className="flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 active:scale-95 transition-all text-sm font-bold shadow-md"
+                className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:scale-95 transition-all text-sm font-bold shadow-md"
               >
                 {copied ? (
                   <>
@@ -185,11 +191,21 @@ export default function LeadAssignPage() {
               </button>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-50 to-gray-100 border-2 border-gray-200 rounded-lg p-4 min-h-[250px] shadow-inner overflow-auto">
+            <div className="bg-gradient-to-br from-slate-50 to-gray-100 border-2 border-gray-200 rounded-lg p-4 mb-9 min-h-[250px] shadow-inner overflow-auto">
               <pre className="whitespace-pre-wrap font-sans text-sm text-gray-800 leading-relaxed">
                 {buildMessage()}
               </pre>
             </div>
+                          <button
+                onClick={sendToWhatsApp}
+                className="absolute bottom-0 right-5 z-50 flex items-center gap-2 
+             px-3 py-2 bg-green-700 text-white rounded-full 
+             hover:opacity-90 active:scale-95 transition-all 
+             text-sm font-bold shadow-lg mb-2"
+              >
+                <Send />
+                WhatsApp
+              </button>
           </div>
         </div>
       </div>
