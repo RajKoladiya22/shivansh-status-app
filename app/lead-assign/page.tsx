@@ -169,7 +169,7 @@ export default function LeadAssignPage() {
           </div>
 
           {/* RIGHT: PREVIEW */}
-          <div className="bg-white rounded-lg shadow-sm p-5 lg:sticky lg:top-6 h-fit">
+          <div className="bg-white rounded-lg shadow-sm p-5 lg:sticky lg:top-6 h-fit relative">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-gray-900">Preview</h2>
 

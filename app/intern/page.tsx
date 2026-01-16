@@ -172,7 +172,7 @@ export default function InternStatusPage() {
           </div>
 
           {/* RIGHT SIDE: PREVIEW */}
-          <div className="bg-white rounded-lg shadow-sm p-5 h-fit lg:sticky lg:top-6">
+          <div className="bg-white rounded-lg shadow-sm p-5 h-fit lg:sticky lg:top-6 relative">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-gray-900">Preview</h2>
 
