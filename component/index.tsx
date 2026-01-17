@@ -794,6 +794,7 @@ export function Preview({
   learnings,
   queries,
   expertQueries,
+  teamName,
 }: any) {
   function formatTask(item: string) {
     const [product, customer, comment, status] = item.split(" - ");
@@ -810,7 +811,7 @@ export function Preview({
 
   function generateMessage() {
     const today = new Date().toLocaleDateString("en-GB");
-    let message = `Account Team ${yourName}'s Daily Status of ${projectName} ${today}\n\n`;
+    let message = `${teamName} Team ${yourName}'s Daily Status of ${projectName} ${today}\n\n`;
 
     if (workedOn.some((i: any) => i.trim())) {
       message += `Worked-On:\n`;

@@ -80,19 +80,26 @@ function AutocompleteInput({ value, onChange, placeholder, historyKey }: any) {
 function BillingItem({ value, onChange, onRemove, showRemove }: any) {
   const [item, setItem] = useState("");
   const [desc, setDesc] = useState("");
-  const [qty, setQty] = useState(1);
-  const [rate, setRate] = useState(0);
+  const [qty, setQty] = useState("");
+  const [rate, setRate] = useState("");
 
   useEffect(() => {
     const [i, d, q, r] = value.split(" - ");
     setItem(i || "");
     setDesc(d || "");
-    setQty(Number(q) || 1);
-    setRate(Number(r) || 0);
+    setQty(q );
+    setRate(r);
   }, [value]);
 
+  // function pushChange(i = item, d = desc, q = qty, r = rate) {
+  //   const total = q * r;
+  //   onChange(`${i} - ${d} - ${q} - ${r} - ${total}`);
+  // }
   function pushChange(i = item, d = desc, q = qty, r = rate) {
-    const total = q * r;
+    const qNum = Number(q);
+    const rNum = Number(r);
+    const total = !isNaN(qNum) && !isNaN(rNum) ? qNum * rNum : "";
+
     onChange(`${i} - ${d} - ${q} - ${r} - ${total}`);
   }
 
@@ -146,9 +153,9 @@ function BillingItem({ value, onChange, onRemove, showRemove }: any) {
             type="number"
             value={qty}
             onChange={(e) => {
-              const v = Number(e.target.value);
+              const v = e.target.value; // keep as string
               setQty(v);
-              pushChange(item, desc, v);
+              pushChange(item, desc, v, rate);
             }}
             className="text-black w-full px-3 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-white"
             placeholder="0"
@@ -164,7 +171,7 @@ function BillingItem({ value, onChange, onRemove, showRemove }: any) {
             type="number"
             value={rate}
             onChange={(e) => {
-              const v = Number(e.target.value);
+              const v = e.target.value;
               setRate(v);
               pushChange(item, desc, qty, v);
             }}
@@ -176,11 +183,11 @@ function BillingItem({ value, onChange, onRemove, showRemove }: any) {
         </div>
       </div>
 
-      {qty > 0 && rate > 0 && (
+      {Number(qty) > 0 && Number(rate) > 0 && (
         <div className="pt-2 border-t border-gray-200">
           <p className="text-sm text-gray-600">
             <span className="font-semibold">Total:</span> {qty} × ₹{rate} = ₹
-            {(qty * rate).toFixed(2)} + GST
+            {(Number(qty) * Number(rate)).toFixed(2)} + GST
           </p>
         </div>
       )}
