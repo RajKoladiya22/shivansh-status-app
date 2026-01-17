@@ -193,7 +193,7 @@ export function ProductSearchSelect({
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(initialValue);
   const [products, setProducts] = useState<string[]>(() =>
-    getFromStorage("products")
+    getFromStorage("products"),
   );
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -202,7 +202,7 @@ export function ProductSearchSelect({
   const filtered = useMemo(() => {
     if (!search.trim()) return products;
     return products.filter((p) =>
-      p.toLowerCase().includes(search.toLowerCase())
+      p.toLowerCase().includes(search.toLowerCase()),
     );
   }, [search, products]);
 
@@ -306,7 +306,7 @@ export function AutocompleteInput({
 }) {
   const [show, setShow] = useState(false);
   const [history, setHistory] = useState<string[]>(() =>
-    getFromStorage(historyKey)
+    getFromStorage(historyKey),
   );
 
   useEffect(() => setHistory(getFromStorage(historyKey)), [historyKey]);
@@ -315,7 +315,7 @@ export function AutocompleteInput({
     if (!value.trim()) return [];
     return history
       .filter(
-        (h) => h.toLowerCase().includes(value.toLowerCase()) && h !== value
+        (h) => h.toLowerCase().includes(value.toLowerCase()) && h !== value,
       )
       .slice(0, 5);
   }, [value, history]);
@@ -385,7 +385,7 @@ export function DynamicStatusSelect({
   }, [statuses]);
 
   const filtered = list.filter((s) =>
-    s.toLowerCase().includes(search.toLowerCase())
+    s.toLowerCase().includes(search.toLowerCase()),
   );
 
   const addNewStatus = () => {
@@ -486,40 +486,77 @@ export function TaskItem({
   onChange,
   onRemove,
   showRemove,
-  enableStatus = false, // NEW
-  statusList = [], // NEW
+  enableStatus = false,
+  statusList = [],
 }: {
   value: string;
   onChange: (s: string) => void;
   onRemove: () => void;
   showRemove: boolean;
-  enableStatus?: boolean; // NEW
-  statusList?: string[]; // NEW
+  enableStatus?: boolean;
+  statusList?: string[];
 }) {
   const [product, setProduct] = useState("");
   const [customer, setCustomer] = useState("");
+  const [contact, setContact] = useState("");
   const [comment, setComment] = useState("");
-  const [status, setStatus] = useState(""); // NEW FIELD
+  const [status, setStatus] = useState("");
 
-  /* Parse existing value including optional status */
+  const [showLeadPopup, setShowLeadPopup] = useState(false);
+  const [leadText, setLeadText] = useState("");
+
+  /* ---------------- Parse Stored Value (Backward Compatible) ---------------- */
   useEffect(() => {
     const parts = value?.split(" - ") || [];
-
     setProduct(parts[0] || "");
     setCustomer(parts[1] || "");
-    setComment(parts[2] || "");
-    setStatus(parts[3] || ""); // status (if exists)
+    setContact(parts[2] || "");
+    setComment(parts[3] || "");
+    setStatus(parts[4] || "");
   }, [value]);
 
-  /* Build final value string */
-  function pushChange(p: string, c: string, com: string, st: string) {
-    let composed = `${p} - ${c} - ${com}`;
+  /* ---------------- Build Value String ---------------- */
+  function pushChange(
+    p = product,
+    c = customer,
+    ct = contact,
+    com = comment,
+    st = status,
+  ) {
+    let composed = `${p} - ${c} - ${ct} - ${com}`;
     if (enableStatus) composed += ` - ${st || ""}`;
     onChange(composed);
   }
 
+  /* ---------------- Lead Message Parser ---------------- */
+  function parseLeadMessage(text: string) {
+    const pick = (label: string) =>
+      text.match(new RegExp(`\\*${label}:\\*\\s*(.+)`, "i"))?.[1]?.trim() || "";
+
+    const parsedProduct = pick("Product");
+    const parsedCustomer = pick("Customer Name");
+    const parsedContact = pick("Mobile Number");
+    const parsedComment = pick("Remark");
+
+    setProduct(parsedProduct || product);
+    setCustomer(parsedCustomer || customer);
+    setContact(parsedContact || contact);
+    setComment(parsedComment || comment);
+
+    pushChange(
+      parsedProduct || product,
+      parsedCustomer || customer,
+      parsedContact || contact,
+      parsedComment || comment,
+      status,
+    );
+
+    setLeadText("");
+    setShowLeadPopup(false);
+  }
+
   return (
-    <div className="relative space-y-2 p-4 bg-gradient-to-br from-gray-50 to-white rounded-lg border-2 border-gray-200 hover:border-gray-300 transition-all">
+    <div className="relative space-y-3 p-4 bg-gradient-to-br from-gray-50 to-white rounded-lg border-2 border-gray-200 hover:border-gray-300 transition-all">
       {/* Remove Button */}
       {showRemove && (
         <button
@@ -533,57 +570,79 @@ export function TaskItem({
         </button>
       )}
 
-      {/* Product + Customer */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {/* Product */}
+      {/* Product */}
+      <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 items-end">
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1.5">
             Product *
           </label>
           <ProductSearchSelect
+            initialValue={product}
             onSelect={(p) => {
               setProduct(p);
-              pushChange(p, customer, comment, status);
+              pushChange(p);
             }}
-            initialValue={product}
           />
         </div>
 
-        {/* Customer */}
+        <button
+          type="button"
+          onClick={() => setShowLeadPopup(true)}
+          className="h-[42px] px-4 text-sm font-semibold text-blue-600 border-2 border-blue-300 rounded-lg hover:bg-blue-50 transition"
+        >
+          Paste Lead
+        </button>
+      </div>
+
+      {/* Customer */}
+      <div>
+        <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+          Customer *
+        </label>
+        <input
+          value={customer}
+          onChange={(e) => {
+            setCustomer(e.target.value);
+            pushChange(product, e.target.value);
+          }}
+          placeholder="Customer name"
+          className="text-black w-full px-3 py-2.5 border-2 border-gray-300 rounded-lg
+                     focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm bg-white"
+        />
+      </div>
+
+      {/* Contact + Paste Lead */}
+      <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 items-end">
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-            Customer *
+            Contact Number
           </label>
           <input
-            type="text"
-            value={customer}
+            value={contact}
             onChange={(e) => {
-              setCustomer(e.target.value);
-              pushChange(product, e.target.value, comment, status);
+              setContact(e.target.value);
+              pushChange(product, customer, e.target.value);
             }}
-            placeholder="Customer name"
+            placeholder="+91 XXXXX XXXXX"
             className="text-black w-full px-3 py-2.5 border-2 border-gray-300 rounded-lg
-                       focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
-                       outline-none transition-all text-sm bg-white"
+                       focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm bg-white"
           />
         </div>
       </div>
 
-      {/* Status Selector (OPTIONAL) */}
+      {/* Status */}
       {enableStatus && (
         <div>
           <label className="block text-xs font-semibold text-gray-700 mb-1.5">
             Status
           </label>
-
           <DynamicStatusSelect
             value={status}
+            statuses={statusList}
             onChange={(v) => {
               setStatus(v);
-              pushChange(product, customer, comment, v);
+              pushChange(product, customer, contact, comment, v);
             }}
-            statuses={statusList}
-            placeholder="Select status"
           />
         </div>
       )}
@@ -594,18 +653,59 @@ export function TaskItem({
           Comment
         </label>
         <input
-          type="text"
           value={comment}
           onChange={(e) => {
             setComment(e.target.value);
-            pushChange(product, customer, e.target.value, status);
+            pushChange(product, customer, contact, e.target.value);
           }}
           placeholder="Add comment or details"
           className="text-black w-full px-3 py-2.5 border-2 border-gray-300 rounded-lg
-                     focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
-                     outline-none transition-all text-sm bg-white"
+                     focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm bg-white"
         />
       </div>
+
+      {/* Lead Popup */}
+      {showLeadPopup && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/40"
+            onClick={() => setShowLeadPopup(false)}
+          />
+          <div
+            className="fixed z-50 top-1/2 left-1/2 w-[92%] max-w-lg
+                       -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl
+                       shadow-xl p-5 space-y-3"
+          >
+            <h3 className="text-sm font-semibold">Paste Lead Message</h3>
+
+            <textarea
+              value={leadText}
+              onChange={(e) => setLeadText(e.target.value)}
+              rows={6}
+              placeholder="*Customer Name:* John
+*Mobile Number:* 9XXXXXXXXX
+*Product:* GST Reconciliation
+*Remark:* Interested"
+              className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                onClick={() => setShowLeadPopup(false)}
+                className="px-4 py-2 text-sm rounded-lg border hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => parseLeadMessage(leadText)}
+                className="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+              >
+                Auto Fill
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -796,14 +896,27 @@ export function Preview({
   expertQueries,
   teamName,
 }: any) {
+  function parseTask(item: string) {
+    const parts = item.split(" - ");
+
+    return {
+      product: parts[0] || "",
+      customer: parts[1] || "",
+      contact: parts.length >= 4 ? parts[2] : "",
+      comment: parts.length >= 4 ? parts[3] : parts[2] || "",
+      status: parts.length === 5 ? parts[4] : parts[3] || "",
+    };
+  }
+
   function formatTask(item: string) {
-    const [product, customer, comment, status] = item.split(" - ");
+    const { product, customer, contact, comment, status } = parseTask(item);
 
     return [
-      product ? `• Product: ${product}` : "",
-      customer ? `  Customer: ${customer}` : "",
-      status ? `  Status: ${status}` : "",
-      comment ? `  Comment: ${comment}` : "",
+      product ? `*• Product:* ${product}` : "",
+      customer ? `  *Customer:* ${customer}` : "",
+      contact ? `  *Contact:* ${contact}` : "",
+      status ? `  *Status:* ${status}` : "",
+      comment ? `  *Comment:* ${comment}` : "",
     ]
       .filter(Boolean)
       .join("\n");
@@ -843,9 +956,9 @@ export function Preview({
       message += "\n";
     }
 
-        if (expertQueries.some((q:any) => q.expert.trim() || q.query.trim())) {
+    if (expertQueries.some((q: any) => q.expert.trim() || q.query.trim())) {
       message += `Any Query from Expert:\n`;
-      expertQueries.forEach((q:any) => {
+      expertQueries.forEach((q: any) => {
         if (q.expert.trim() || q.query.trim()) {
           message += `- Expert: ${q.expert || "—"}\n`;
           message += `  Query: ${q.query || "—"}\n\n`;
@@ -867,3 +980,132 @@ export function Preview({
     </div>
   );
 }
+
+// export function TaskItem({
+//   value,
+//   onChange,
+//   onRemove,
+//   showRemove,
+//   enableStatus = false, // NEW
+//   statusList = [], // NEW
+// }: {
+//   value: string;
+//   onChange: (s: string) => void;
+//   onRemove: () => void;
+//   showRemove: boolean;
+//   enableStatus?: boolean; // NEW
+//   statusList?: string[]; // NEW
+// }) {
+//   const [product, setProduct] = useState("");
+//   const [customer, setCustomer] = useState("");
+//   const [comment, setComment] = useState("");
+//   const [status, setStatus] = useState(""); // NEW FIELD
+
+//   /* Parse existing value including optional status */
+//   useEffect(() => {
+//     const parts = value?.split(" - ") || [];
+
+//     setProduct(parts[0] || "");
+//     setCustomer(parts[1] || "");
+//     setComment(parts[2] || "");
+//     setStatus(parts[3] || ""); // status (if exists)
+//   }, [value]);
+
+//   /* Build final value string */
+//   function pushChange(p: string, c: string, com: string, st: string) {
+//     let composed = `${p} - ${c} - ${com}`;
+//     if (enableStatus) composed += ` - ${st || ""}`;
+//     onChange(composed);
+//   }
+
+//   return (
+//     <div className="relative space-y-2 p-4 bg-gradient-to-br from-gray-50 to-white rounded-lg border-2 border-gray-200 hover:border-gray-300 transition-all">
+//       {/* Remove Button */}
+//       {showRemove && (
+//         <button
+//           onClick={onRemove}
+//           title="Remove"
+//           className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center
+//                      text-red-500 hover:text-white hover:bg-red-500 rounded-full
+//                      border-2 border-red-300 hover:border-red-500 transition-all"
+//         >
+//           <X className="w-4 h-4" />
+//         </button>
+//       )}
+
+//       {/* Product + Customer */}
+//       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+//         {/* Product */}
+//         <div>
+//           <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+//             Product *
+//           </label>
+//           <ProductSearchSelect
+//             onSelect={(p) => {
+//               setProduct(p);
+//               pushChange(p, customer, comment, status);
+//             }}
+//             initialValue={product}
+//           />
+//         </div>
+
+//         {/* Customer */}
+//         <div>
+//           <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+//             Customer *
+//           </label>
+//           <input
+//             type="text"
+//             value={customer}
+//             onChange={(e) => {
+//               setCustomer(e.target.value);
+//               pushChange(product, e.target.value, comment, status);
+//             }}
+//             placeholder="Customer name"
+//             className="text-black w-full px-3 py-2.5 border-2 border-gray-300 rounded-lg
+//                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+//                        outline-none transition-all text-sm bg-white"
+//           />
+//         </div>
+//       </div>
+
+//       {/* Status Selector (OPTIONAL) */}
+//       {enableStatus && (
+//         <div>
+//           <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+//             Status
+//           </label>
+
+//           <DynamicStatusSelect
+//             value={status}
+//             onChange={(v) => {
+//               setStatus(v);
+//               pushChange(product, customer, comment, v);
+//             }}
+//             statuses={statusList}
+//             placeholder="Select status"
+//           />
+//         </div>
+//       )}
+
+//       {/* Comment */}
+//       <div>
+//         <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+//           Comment
+//         </label>
+//         <input
+//           type="text"
+//           value={comment}
+//           onChange={(e) => {
+//             setComment(e.target.value);
+//             pushChange(product, customer, e.target.value, status);
+//           }}
+//           placeholder="Add comment or details"
+//           className="text-black w-full px-3 py-2.5 border-2 border-gray-300 rounded-lg
+//                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+//                      outline-none transition-all text-sm bg-white"
+//         />
+//       </div>
+//     </div>
+//   );
+// }

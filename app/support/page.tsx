@@ -42,14 +42,26 @@ export default function StatusUpdateCreator() {
   ]);
 
   const historyUpdates = useMemo(() => getRecentUpdates(), []);
+  function parseTask(item: string) {
+    const parts = item.split(" - ");
+
+    return {
+      product: parts[0] || "",
+      customer: parts[1] || "",
+      contact: parts.length >= 4 ? parts[2] : "",
+      comment: parts.length >= 4 ? parts[3] : parts[2] || "",
+      status: parts.length === 5 ? parts[4] : parts[3] || "",
+    };
+  }
 
   function buildMessage() {
     const formatTask = (item: string) => {
-      const [product, customer, comment, status] = item.split(" - ");
+      const { product, customer, contact, comment, status } = parseTask(item);
 
       return [
         product ? `*• Product:* ${product}` : "",
         customer ? `  *Customer:* ${customer}` : "",
+        contact ? `  *Contact:* ${contact}` : "",
         status ? `  *Status:* ${status}` : "",
         comment ? `  *Comment:* ${comment}` : "",
       ]
@@ -130,22 +142,14 @@ export default function StatusUpdateCreator() {
     }
 
     if (inProgress.some((i) => i.trim())) {
-      message += `*In-Progress Task:*\n`;
+      message += `\n*In-Progress Task:*\n`;
       inProgress.forEach((item) => {
         if (item.trim()) message += `${formatTask(item)}\n\n`;
       });
     }
 
-    if (learnings.some((i) => i.trim())) {
-      message += `*My Today Learning:*\n`;
-      learnings.forEach((item) =>
-        item.trim() ? (message += `- ${item}\n`) : null,
-      );
-      message += `\n`;
-    }
-
     if (queries.some((i) => i.trim())) {
-      message += `*Query:*\n`;
+      message += `\n*Query:*\n`;
       queries.forEach((item) =>
         item.trim() ? (message += `- ${formatTask(item)}\n`) : null,
       );
@@ -163,6 +167,13 @@ export default function StatusUpdateCreator() {
       message += `\n`;
     }
 
+    if (learnings.some((i) => i.trim())) {
+      message += `\n*My Today Learning:*\n`;
+      learnings.forEach((item) =>
+        item.trim() ? (message += `- ${item}\n`) : null,
+      );
+      message += `\n`;
+    }
     message += `*Submitted by:* ${yourName}`;
 
     navigator.clipboard.writeText(message);
@@ -192,7 +203,12 @@ export default function StatusUpdateCreator() {
     setWorkedOn(update.workedOn?.length ? update.workedOn : [""]);
     setInProgress(update.inProgress?.length ? update.inProgress : [""]);
     setQueries(update.queries?.length ? update.queries : [""]);
-    setExpertQueries(update.expertQueries ? update.expertQueries : {});
+    setExpertQueries(
+      Array.isArray(update.expertQueries)
+        ? update.expertQueries
+        : [{ expert: "", query: "" }],
+    );
+
     setShowHistory(false);
   }
 
@@ -250,16 +266,15 @@ export default function StatusUpdateCreator() {
                 addColor="bg-orange-500"
               />
 
-              <TodayLearningSection
-                learnings={learnings}
-                setLearnings={setLearnings}
-              />
-
               <TaskList
                 items={queries}
                 setItems={setQueries}
                 title="Queries"
                 addColor="bg-purple-600"
+              />
+              <TodayLearningSection
+                learnings={learnings}
+                setLearnings={setLearnings}
               />
               <ExpertQuerySection
                 items={expertQueries}
