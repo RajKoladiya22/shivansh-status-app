@@ -14,7 +14,7 @@ type Lead = {
   remark: string;
 };
 
-const LEAD_TYPES = ["Tally", "WhatsApp", "Cloud", "BizAnalyst", "TDL Lead"];
+const LEAD_TYPES = ["Tally", "WhatsApp", "Cloud", "BizAnalyst", "TDL"];
 
 export default function LeadAssignPage() {
   const [lead, setLead] = useState<Lead>({
