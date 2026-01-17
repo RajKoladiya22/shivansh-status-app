@@ -13,7 +13,20 @@ const DEFAULT_QUERIES = [
   "Tally Sync Problem",
 ];
 
+
+const SUPPORT_TYPES = ["Tally", "TDL", "Cloud", "Whatsapp / Biz Analyst"];
+
 export default function SupportPage() {
+    const [lead, setLead] = useState({
+      leadTypes: "",
+      customerName: "",
+      mobile: "",
+      products: [],
+      cost: 0,
+      assignedTo: "",
+      status: "",
+      remark: "",
+    });
   const [adminName, setAdminName] = useState("Mehul Patel");
 
   const [customerName, setCustomerName] = useState("");
@@ -64,7 +77,8 @@ export default function SupportPage() {
 
   function buildMessage() {
     return (
-      `*Support*\n\n` +
+      // `*Support*\n\n` +
+      `*${lead.leadTypes} - Support*\n\n` +
       `*Customer Name:* ${customerName || "—"}${
         isPrime ? " - Prime Customer" : ""
       }\n` +
@@ -96,6 +110,26 @@ export default function SupportPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* LEFT */}
           <div className="bg-white rounded-lg shadow-sm p-5 space-y-5">
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">
+              Support for *
+            </label>
+            <select
+              className="w-full px-3 py-2.5 border-2 border-gray-300 rounded-lg text-sm outline-none bg-white focus:ring-2 focus:ring-blue-500"
+              value={lead.leadTypes}
+              onChange={(e) =>
+                setLead((prev) => ({
+                  ...prev,
+                  leadTypes: e.target.value,
+                }))
+              }
+            >
+              <option value="">Select Support Type</option>
+              {SUPPORT_TYPES.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
             {/* Admin */}
             <div>
               <label className="block text-sm font-bold text-gray-900 mb-1">

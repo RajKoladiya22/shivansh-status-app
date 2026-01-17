@@ -94,24 +94,6 @@ export default function LeadAssignPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* LEFT: FORM */}
           <div className="bg-white rounded-lg shadow-sm p-5 space-y-5">
-            {/* <div className="grid grid-cols-2 gap-2">
-              {LEAD_TYPES.map((t) => (
-                <label key={t} className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={lead.leadTypes.includes(t)}
-                    onChange={(e) =>
-                      setLead((prev) => ({
-                        ...prev,
-                        leadTypes: e.target.value,
-                      }))
-                      
-                    }
-                  />
-                  {t}
-                </label>
-              ))}
-            </div> */}
             <label className="block text-xs font-semibold text-gray-700 mb-1">
               Lead for *
             </label>
