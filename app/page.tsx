@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Users, Briefcase, GraduationCap, ArrowRight, Form, NotebookPen } from "lucide-react";
+import { Users, Briefcase, GraduationCap, ArrowRight, Form, NotebookPen, FormInputIcon } from "lucide-react";
 
 const TEAMS = [
   {
@@ -51,6 +51,14 @@ const TEAMS = [
     href: "/general",
     icon: NotebookPen,
     gradient: "from-yellow-600 to-red-700",
+  },
+  {
+    title: "Billing",
+    description:
+      "Write your Billing Details here",
+    href: "/billing",
+    icon: FormInputIcon,
+    gradient: "from-gray-600 to-red-700",
   },
 ];
 
