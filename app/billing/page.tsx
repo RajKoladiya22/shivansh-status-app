@@ -245,24 +245,24 @@ export default function BillingDetailsPage() {
   function buildMessage() {
     let msg = `*BILLING DETAILS :*\n\n`;
 
-    msg += `*COMPANY NAME:* ${companyName}\n`;
-    msg += `*GST NO :* ${gstNo}\n`;
-    msg += `*TALLY SERIAL NO :* ${tallySerialNo}\n\n`;
+    msg += `*COMPANY NAME:*  ${companyName}\n`;
+    msg += `*GST NO :*  ${gstNo}\n`;
+    msg += `*TALLY SERIAL NO :*  ${tallySerialNo}\n\n`;
 
     items.forEach((i, idx) => {
       const [n, d, q, r, t] = i.split(" - ");
       if (!n) return;
 
-      msg += `*${idx + 1}. ITEM NAME :* ${n}\n`;
-      msg += `*Add Description:* ${d}\n`;
-      msg += `*RATE & QNTY:* ${q} × ${r} = ${t} + GST\n\n`;
+      msg += `*${idx + 1}. ITEM NAME :*  ${n}\n`;
+      msg += `*Add Description:*  ${d}\n`;
+      msg += `*RATE & QNTY:*  ${q} × ${r} = ${t} + GST\n\n`;
     });
 
     msg += `*OTHER DETAILS :*\n\n`;
-    msg += `*EMAIL ID:* ${email}\n`;
-    msg += `*CONTACT PERSON:* ${contact}\n`;
-    msg += `*MOB. NO. :* ${mobile}\n`;
-    msg += `*PAYMENT STATUS :* ${paymentStatus}\n`;
+    msg += `*EMAIL ID:*  ${email}\n`;
+    msg += `*CONTACT PERSON:*  ${contact}\n`;
+    msg += `*MOB. NO. :*  ${mobile}\n`;
+    msg += `*PAYMENT STATUS :*  ${paymentStatus}\n`;
 
     return msg;
   }

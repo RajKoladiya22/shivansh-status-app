@@ -77,7 +77,8 @@ export default function SupportPage() {
   function buildMessage() {
     return (
       // `*Support*\n\n` +
-      `*${lead.leadTypes} - Support*\n\n` +
+      // `*${lead.leadTypes} - Support*\n\n` +
+      `${lead.leadTypes ? `*${lead.leadTypes} - Support*\n\n` : "*Support*\n\n"}` +
       `*Customer Name:* ${customerName || "—"}${
         isPrime ? " - Prime Customer" : ""
       }\n` +

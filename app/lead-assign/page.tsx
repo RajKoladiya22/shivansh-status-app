@@ -54,8 +54,8 @@ export default function LeadAssignPage() {
 
   function buildMessage() {
     return (
-      // `*Lead*\n\n` +
-      `*${lead.leadTypes} - Lead*\n\n` +
+      // `*Lead*\n\n` + 
+      `${lead.leadTypes ? `*${lead.leadTypes} - Lead*\n\n` : "*Lead*\n\n"}` +
       `*Customer Name:* ${customerName || "—"}\n` +
       `*Mobile Number:* ${mobile || "—"}\n` +
       `${product ? `*Product:* ${product || "—"}\n` : ""}` +
