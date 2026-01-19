@@ -83,6 +83,7 @@ export default function GeneralUpdatePage() {
     if (
       inProgress.some((p) => (p.project || "").trim() || (p.task || "").trim())
     ) {
+      msg += `*-------------------------*\n`;
       msg += `*In-Progress Task:*\n`;
       inProgress.forEach((p) => {
         if ((p.project || "").trim() || (p.task || "").trim()) {
@@ -96,6 +97,7 @@ export default function GeneralUpdatePage() {
     if (
       queries.some((q) => (q.project || "").trim() || (q.query || "").trim())
     ) {
+      msg += `*-------------------------*\n`;
       msg += `*Query:*\n`;
       queries.forEach((q) => {
         if ((q.project || "").trim() || (q.query || "").trim()) {
