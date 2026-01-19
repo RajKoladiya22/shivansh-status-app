@@ -970,7 +970,7 @@ export default function AccountStatusPage() {
         (s) => s.workType?.trim() || s.entries?.trim() || s.remarks?.trim(),
       )
     ) {
-      msg += `1. Sales, Purchase, Ledger Entry:\n`;
+      msg += `*1. Sales, Purchase, Ledger Entry:*\n`;
       salesEntries.forEach((e) => {
         if (e.workType?.trim() || e.entries?.trim() || e.remarks?.trim()) {
           msg += `${formatSalesEntry(e)}\n\n`;
@@ -982,7 +982,8 @@ export default function AccountStatusPage() {
 
     // 2. Payment Follow-up
     if (paymentFollowUps.some((i) => i.trim())) {
-      msg += `2. Payment Follow-up:\n`;
+      msg += `*-------------------------*\n`;
+      msg += `*2. Payment Follow-up:*\n`;
       paymentFollowUps.forEach((p) => {
         // console.log(p);
 
@@ -994,20 +995,9 @@ export default function AccountStatusPage() {
       msg += ``;
     }
 
-    // 3. My Today Learning
-    if (learnings.some((l) => l.trim())) {
-      msg += `3. My Today Learning:\n`;
-      learnings.forEach((l) => {
-        if (l.trim()) msg += `- ${l}\n`;
-      });
-      msg += `\n`;
-    } else {
-      msg += ``;
-    }
-
-    // 4. Any Query
+    // 3. Any Query
     // if (queries.some((q) => q.trim())) {
-    //   msg += `4. Any Query:\n`;
+    //   msg += `3. Any Query:\n`;
     //   queries.forEach((q) => {
     //     console.log(queries);
 
@@ -1017,9 +1007,10 @@ export default function AccountStatusPage() {
     //   msg += ``;
     // }
 
-    // 4. Any Query
+    // 3. Any Query
     if (queries.some((i) => i.trim())) {
-      msg += `4. Any Query:\n`;
+      msg += `*-------------------------*\n`;
+      msg += `*3. Any Query:*\n`;
       queries.forEach((p) => {
         // console.log(p);
 
@@ -1031,10 +1022,23 @@ export default function AccountStatusPage() {
       msg += ``;
     }
 
+    // 4. My Today Learning
+    if (learnings.some((l) => l.trim())) {
+      msg += `*-------------------------*\n`;
+      msg += `*4. My Today Learning:*\n`;
+      learnings.forEach((l) => {
+        if (l.trim()) msg += `- ${l}\n`;
+      });
+      msg += `\n`;
+    } else {
+      msg += ``;
+    }
+
     // 5. Any Query from Expert
 
     if (expertQueries.some((q) => q.expert.trim() || q.query.trim())) {
-      msg += `5. Any Query from Expert:\n`;
+      msg += `*-------------------------*\n`;
+      msg += `*5. Any Query from Expert:*\n`;
       expertQueries.forEach((q) => {
         if (q.expert.trim() || q.query.trim()) {
           msg += `- *Expert:* _${q.expert || "—"}_\n`;
@@ -1045,7 +1049,7 @@ export default function AccountStatusPage() {
       msg += ``;
     }
 
-    msg += `Submitted by: ${yourName || "—"}`;
+    msg += `*Submitted by:* ${yourName || "—"}`;
     return msg;
   }
 
@@ -1267,15 +1271,6 @@ export default function AccountStatusPage() {
             />
             {/* </div> */}
 
-            {/* Section 3: Today Learning */}
-            {/* <div className="border-2 border-gray-200 rounded-lg p-4">
-              <label className="text-sm font-bold text-gray-900 mb-3 block">3. My Today Learning</label> */}
-            <TodayLearningSection
-              learnings={learnings}
-              setLearnings={setLearnings}
-            />
-            {/* </div> */}
-
             {/* Section 4: Query from Expert */}
             {/* <div className="border-2 border-gray-200 rounded-lg p-4">
               <label className="text-sm font-bold text-gray-900 mb-3 block">4. Any Query from Expert</label> */}
@@ -1286,6 +1281,15 @@ export default function AccountStatusPage() {
               title="Queries"
               addColor="bg-purple-600"
               enableStatus={false}
+            />
+            {/* </div> */}
+
+            {/* Section 3: Today Learning */}
+            {/* <div className="border-2 border-gray-200 rounded-lg p-4">
+              <label className="text-sm font-bold text-gray-900 mb-3 block">3. My Today Learning</label> */}
+            <TodayLearningSection
+              learnings={learnings}
+              setLearnings={setLearnings}
             />
             {/* </div> */}
 
@@ -1353,4 +1357,3 @@ export default function AccountStatusPage() {
     </div>
   );
 }
-

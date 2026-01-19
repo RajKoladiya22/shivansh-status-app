@@ -80,6 +80,7 @@ export default function StatusUpdateCreator() {
     }
 
     if (inProgress.some((i) => i.trim())) {
+      message += `*__________________*\n`;
       message += `*In-Progress Task:*\n`;
       inProgress.forEach((item) => {
         if (item.trim()) message += `${formatTask(item)}\n\n`;
@@ -123,10 +124,10 @@ export default function StatusUpdateCreator() {
 
       return [
         product ? `• *Product:* ${product}` : "",
-        customer ? `  *Customer:* ${customer}` : "",
-        contact ? `  *Contact:* ${contact}` : "",
-        status ? `  *Status:* ${status}` : "",
-        comment ? `  *Comment:* ${comment}` : "",
+        customer ? `    *Customer:* ${customer}` : "",
+        contact ? `    *Contact:* ${contact}` : "",
+        status ? `    *Status:* ${status}` : "",
+        comment ? `    *Comment:* ${comment}` : "",
       ]
         .filter(Boolean)
         .join("\n");
@@ -145,20 +146,23 @@ export default function StatusUpdateCreator() {
     }
 
     if (inProgress.some((i) => i.trim())) {
-      message += `\n*In-Progress Task:*\n`;
+      message += `*-------------------------*\n`;
+      message += `*In-Progress Task:*\n`;
       inProgress.forEach((item) => {
         if (item.trim()) message += `${formatTask(item)}\n\n`;
       });
     }
 
     if (queries.some((i) => i.trim())) {
-      message += `\n*Query:*\n`;
+      message += `*-------------------------*\n`;
+      message += `*Query:*\n`;
       queries.forEach((item) =>
         item.trim() ? (message += `- ${formatTask(item)}\n`) : null,
       );
       message += `\n`;
     }
     if (expertQueries.some((q) => q.expert.trim() || q.query.trim())) {
+      message += `*-------------------------*\n`;
       message += `Any Query from Expert:\n`;
       expertQueries.forEach((q) => {
         if (q.expert.trim() || q.query.trim()) {
@@ -171,7 +175,8 @@ export default function StatusUpdateCreator() {
     }
 
     if (learnings.some((i) => i.trim())) {
-      message += `\n*My Today Learning:*\n`;
+      message += `*-------------------------*\n`;
+      message += `*My Today Learning:*\n`;
       learnings.forEach((item) =>
         item.trim() ? (message += `- ${item}\n`) : null,
       );
