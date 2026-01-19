@@ -62,7 +62,7 @@ export default function GeneralUpdatePage() {
   function buildMessage() {
     const today = new Date().toLocaleDateString("en-GB");
 
-    let msg = `Here is the ${yourName || "—"}'s ${today} update.\n\n`;
+    let msg = `Here is the ${yourName}'s ${today} update.\n\n`;
 
     /* ---------------- Worked-On ---------------- */
     if (
@@ -71,7 +71,7 @@ export default function GeneralUpdatePage() {
       msg += `*Worked-On:*\n`;
       workedOn.forEach((w) => {
         if ((w.project || "").trim() || (w.task || "").trim()) {
-          msg += `- *[${w.project || "—"}]* ${w.task || "—"}${
+          msg += `- ${w.project ? `*[${w.project || ""}]*` : ""}  ${w.task}${
             w.hrs ? ` (${w.hrs} hrs)` : ""
           }\n`;
         }
@@ -86,7 +86,7 @@ export default function GeneralUpdatePage() {
       msg += `*In-Progress Task:*\n`;
       inProgress.forEach((p) => {
         if ((p.project || "").trim() || (p.task || "").trim()) {
-          msg += `- *[${p.project || "—"}]* ${p.task || "—"}\n`;
+          msg += `- ${p.project ? `*[${p.project || ""}]*` : ""} ${p.task || ""}\n`;
         }
       });
       msg += `\n`;
@@ -99,13 +99,13 @@ export default function GeneralUpdatePage() {
       msg += `*Query:*\n`;
       queries.forEach((q) => {
         if ((q.project || "").trim() || (q.query || "").trim()) {
-          msg += `- *[${q.project || "—"}]* ${q.query || "—"}\n`;
+          msg += `- ${q.project ? `*[${q.project || ""}]*` : ""} ${q.query || ""}\n`;
         }
       });
       msg += `\n`;
     }
 
-    msg += `Thank You,\n${yourName || "—"}`;
+    msg += `Thank You,\n${yourName || ""}`;
 
     return msg;
   }
