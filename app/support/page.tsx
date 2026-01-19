@@ -59,7 +59,7 @@ export default function StatusUpdateCreator() {
       const { product, customer, contact, comment, status } = parseTask(item);
 
       return [
-        product ? `*• Product:* ${product}` : "",
+        product ? `• *Product:* ${product}` : "",
         customer ? `  *Customer:* ${customer}` : "",
         contact ? `  *Contact:* ${contact}` : "",
         status ? `  *Status:* ${status}` : "",
@@ -119,11 +119,12 @@ export default function StatusUpdateCreator() {
 
   function copyToClipboard() {
     const formatTask = (item: string) => {
-      const [product, customer, comment, status] = item.split(" - ");
+      const [product, customer, contact, comment, status] = item.split(" - ");
 
       return [
-        product ? `*• Product:* ${product}` : "",
+        product ? `• *Product:* ${product}` : "",
         customer ? `  *Customer:* ${customer}` : "",
+        contact ? `  *Contact:* ${contact}` : "",
         status ? `  *Status:* ${status}` : "",
         comment ? `  *Comment:* ${comment}` : "",
       ]
@@ -137,6 +138,8 @@ export default function StatusUpdateCreator() {
     if (workedOn.some((i) => i.trim())) {
       message += `*Worked-On:*\n`;
       workedOn.forEach((item) => {
+        // console.log(item);
+        
         if (item.trim()) message += `${formatTask(item)}\n\n`;
       });
     }
@@ -335,3 +338,23 @@ export default function StatusUpdateCreator() {
     </div>
   );
 }
+
+
+// Account Team *'s* Daily Status of  19/01/2026
+
+// *Worked-On:*
+// • *Product:* GST Reconciliation
+//   *Customer:* Raju
+//   *Contact:* 9913423994
+//   *Status:* Pending
+//   *Comment:* comment ... ...
+
+
+// *In-Progress Task:*
+// • *Product:* RTGS Reconciliation
+//   *Customer:* Raj Asodariya
+//   *Contact:* 1234567890
+//   *Comment:* no comment yet
+
+
+// *Submitted by:* 

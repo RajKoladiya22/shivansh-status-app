@@ -499,8 +499,8 @@ export function TaskItem({
   const [product, setProduct] = useState("");
   const [customer, setCustomer] = useState("");
   const [contact, setContact] = useState("");
-  const [comment, setComment] = useState("");
   const [status, setStatus] = useState("");
+  const [comment, setComment] = useState("");
 
   const [showLeadPopup, setShowLeadPopup] = useState(false);
   const [leadText, setLeadText] = useState("");
@@ -908,19 +908,19 @@ export function Preview({
     };
   }
 
-  function formatTask(item: string) {
-    const { product, customer, contact, comment, status } = parseTask(item);
+    const formatTask = (item: string) => {
+      const [product, customer, contact, comment, status] = item.split(" - ");
 
-    return [
-      product ? `*• Product:* ${product}` : "",
-      customer ? `  *Customer:* ${customer}` : "",
-      contact ? `  *Contact:* ${contact}` : "",
-      status ? `  *Status:* ${status}` : "",
-      comment ? `  *Comment:* ${comment}` : "",
-    ]
-      .filter(Boolean)
-      .join("\n");
-  }
+      return [
+        product ? `• *Product:* ${product}` : "",
+        customer ? `  *Customer:* ${customer}` : "",
+        contact ? `  *Contact:* ${contact}` : "",
+        status ? `  *Status:* ${status}` : "",
+        comment ? `  *Comment:* ${comment}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n");
+    };
 
   function generateMessage() {
     const today = new Date().toLocaleDateString("en-GB");
