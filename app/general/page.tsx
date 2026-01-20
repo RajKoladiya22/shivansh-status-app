@@ -492,66 +492,103 @@ export default function GeneralUpdatePage() {
   ) => setQueries(queries.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
 
   /* ------------------------------- Preview ------------------------------- */
+  // function buildMessage() {
+  //   const today = new Date().toLocaleDateString("en-GB");
+
+  //   let msg = `Here is the ${yourName}'s ${today} update.\n\n`;
+
+  //   /* ---------------- Worked-On ---------------- */
+  //   const hasWorked = workedOn.some((w) =>
+  //     (w.project || "").trim() || w.tasks.some((t) => (t.desc || "").trim()),
+  //   );
+
+  //   if (hasWorked) {
+  //     msg += `*Worked-On:*\n`;
+  //     workedOn.forEach((w) => {
+  //       const projectLabel = w.project ? `*[${w.project}]* ` : "";
+  //       w.tasks.forEach((t) => {
+  //         if ((t.desc || "").trim()) {
+  //           msg += `- ${projectLabel}${t.desc}${t.hrs ? ` (${t.hrs} hrs)` : ""}\n`;
+  //         }
+  //       });
+  //     });
+  //     msg += `\n`;
+  //   }
+
+  //   /* ---------------- In-Progress ---------------- */
+  //   const hasInProgress = inProgress.some((p) =>
+  //     (p.project || "").trim() || p.tasks.some((t) => (t || "").trim()),
+  //   );
+
+  //   if (hasInProgress) {
+  //     msg += `*-------------------------*\n`;
+  //     msg += `*In-Progress Task:*\n`;
+  //     inProgress.forEach((p) => {
+  //       const projectLabel = p.project ? `*[${p.project}]* ` : "";
+  //       p.tasks.forEach((t) => {
+  //         if ((t || "").trim()) {
+  //           msg += `- ${projectLabel}${t}\n`;
+  //         }
+  //       });
+  //     });
+  //     msg += `\n`;
+  //   }
+
+  //   /* ---------------- Queries ---------------- */
+  //   if (
+  //     queries.some((q) => (q.project || "").trim() || (q.query || "").trim())
+  //   ) {
+  //     msg += `*-------------------------*\n`;
+  //     msg += `*Query:*\n`;
+  //     queries.forEach((q) => {
+  //       if ((q.project || "").trim() || (q.query || "").trim()) {
+  //         msg += `- ${q.project ? `*[${q.project}]*` : ""} ${q.query || ""}\n`;
+  //       }
+  //     });
+  //     msg += `\n`;
+  //   }
+
+  //   msg += `Thank You,\n${yourName || ""}`;
+
+  //   return msg;
+  // }
   function buildMessage() {
-    const today = new Date().toLocaleDateString("en-GB");
+  const today = new Date().toLocaleDateString("en-GB");
 
-    let msg = `Here is the ${yourName}'s ${today} update.\n\n`;
+  let msg = `Here is the ${yourName}'s ${today} update.\n\n`;
 
-    /* ---------------- Worked-On ---------------- */
-    const hasWorked = workedOn.some((w) =>
-      (w.project || "").trim() || w.tasks.some((t) => (t.desc || "").trim()),
-    );
+  /* ---------------- Worked-On ---------------- */
+  const hasWorked = workedOn.some(
+    (w) =>
+      (w.project || "").trim() ||
+      w.tasks.some((t) => (t.desc || "").trim()),
+  );
 
-    if (hasWorked) {
-      msg += `*Worked-On:*\n`;
-      workedOn.forEach((w) => {
-        const projectLabel = w.project ? `*[${w.project}]* ` : "";
-        w.tasks.forEach((t) => {
-          if ((t.desc || "").trim()) {
-            msg += `- ${projectLabel}${t.desc}${t.hrs ? ` (${t.hrs} hrs)` : ""}\n`;
-          }
-        });
-      });
-      msg += `\n`;
-    }
+  if (hasWorked) {
+    msg += `*Worked-On:*\n`;
 
-    /* ---------------- In-Progress ---------------- */
-    const hasInProgress = inProgress.some((p) =>
-      (p.project || "").trim() || p.tasks.some((t) => (t || "").trim()),
-    );
+    workedOn.forEach((w) => {
+      if (!w.project && w.tasks.every((t) => !t.desc.trim())) return;
 
-    if (hasInProgress) {
-      msg += `*-------------------------*\n`;
-      msg += `*In-Progress Task:*\n`;
-      inProgress.forEach((p) => {
-        const projectLabel = p.project ? `*[${p.project}]* ` : "";
-        p.tasks.forEach((t) => {
-          if ((t || "").trim()) {
-            msg += `- ${projectLabel}${t}\n`;
-          }
-        });
-      });
-      msg += `\n`;
-    }
+      // Project header
+      msg += `- *[${w.project || "Project"}]*\n`;
 
-    /* ---------------- Queries ---------------- */
-    if (
-      queries.some((q) => (q.project || "").trim() || (q.query || "").trim())
-    ) {
-      msg += `*-------------------------*\n`;
-      msg += `*Query:*\n`;
-      queries.forEach((q) => {
-        if ((q.project || "").trim() || (q.query || "").trim()) {
-          msg += `- ${q.project ? `*[${q.project}]*` : ""} ${q.query || ""}\n`;
+      // Tasks under project
+      w.tasks.forEach((t) => {
+        if ((t.desc || "").trim()) {
+          msg += `   - ${t.desc}${t.hrs ? ` (${t.hrs} hrs)` : ""}\n`;
         }
       });
+
       msg += `\n`;
-    }
-
-    msg += `Thank You,\n${yourName || ""}`;
-
-    return msg;
+    });
   }
+
+  msg += `Thank You,\n${yourName || ""}`;
+
+  return msg;
+}
+
 
   const copyMessage = () => {
     navigator.clipboard.writeText(buildMessage());
