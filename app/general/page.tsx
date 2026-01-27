@@ -578,7 +578,9 @@ export default function GeneralUpdatePage() {
       workedOn.forEach((w) => {
         if (!w.project && w.tasks.every((t) => !t.desc.trim())) return;
 
-        msg += `- *[${w.project || "Project"}]*\n`;
+        if (w.project) {
+          msg += `- *[${w.project || ""}]*\n`;
+        }
 
         w.tasks.forEach((t) => {
           if ((t.desc || "").trim()) {
